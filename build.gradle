@@ -9,6 +9,7 @@ buildscript {
         classpath ('com.anatawa12.forge:ForgeGradle:1.2-1.0.+') {
             changing = true
         }
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
     }
 }
 
@@ -18,12 +19,15 @@ configurations {
     compile.extendsFrom packed    
 }
 
-//apply plugin: 'maven'
+
 apply plugin: 'java'
 apply plugin: 'forge'
+apply plugin: 'idea'
+apply plugin: "com.jfrog.artifactory"
+apply plugin: "maven-publish"
+apply plugin: "maven"
 
-
-version = "1.2.5_1.7.10-Thermos"
+version = "${config.mod_version}"
 group= "mcp.mobius.mobiuscore" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "MobiusCore"
 
@@ -60,8 +64,9 @@ dependencies {
 }
 
 minecraft {
-    version = "1.7.10-10.13.4.1614-1.7.10"
-    assetDir = "eclipse/assets"
+    version = config.minecraft_version + "-" + config.forge_version
+    replaceIn "mcp/mobius/mobiuscore/asm/CoreContainer.java"
+    replace "GRADLE_MODVERSION", config.mod_version
 }
 
 processResources
@@ -98,25 +103,37 @@ artifacts {
     archives sourceJar, devJar
 }
 
-uploadArchives {
-    dependsOn 'reobf'
-    repositories.mavenDeployer {
-        configuration = configurations.deployerJars
-        repository(url: "scp://mobiusstrip.eu/home/mobius/web/maven"){
-            authentication(userName: "mobius")
+artifactory {
+    contextUrl = "${artifactory_contextUrl}"
+    publish {
+        repository {
+            repoKey = 'thorfusion'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
         }
+        defaults {
+            publications('mavenJava')
+        }
+        publishBuildInfo = false
+        publishArtifacts = true
+        publishPom = true
+    }
+    resolve {
+        repository {
+            repoKey = 'central'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
 
-        pom {
-            groupId = project.group
-            version = project.version
-            artifactId = project.archivesBaseName
-            project {
-                name project.archivesBaseName
-                packaging 'jar'
-                description 'MobiusCore '
-                url 'http://mobiusstrip.eu'        
-            }
         }
     }
+}
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
 }
