@@ -13,6 +13,14 @@ buildscript {
     }
 }
 
+repositories {
+    maven {
+        name 'central'
+        url 'https://maven.thorfusion.com/artifactory/central/'
+    }
+
+}
+
 configurations {
     deployerJars
     packed
@@ -35,6 +43,10 @@ configFile.withReader {
     def prop = new Properties()
     prop.load(it)
     project.ext.config = new ConfigSlurper().parse prop
+}
+
+dependencies {
+    compile(group: 'ivorius.ivtoolkit', name: 'IvToolkit', version: '1.2.1', classifier: 'dev')
 }
 
 version = "${config.mod_version}"
