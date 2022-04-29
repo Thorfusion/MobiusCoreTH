@@ -27,6 +27,16 @@ apply plugin: "com.jfrog.artifactory"
 apply plugin: "maven-publish"
 apply plugin: "maven"
 
+// Define properties file
+ext.configFile = file "build.properties"
+
+configFile.withReader {
+    // Load config. It shall from now be referenced as simply config or project.config
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.config = new ConfigSlurper().parse prop
+}
+
 version = "${config.mod_version}"
 group= "mcp.mobius.mobiuscore" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "MobiusCore"
@@ -48,15 +58,7 @@ jar {
     }
 }
 
-// Define properties file
-ext.configFile = file "build.properties"
 
-configFile.withReader {
-    // Load config. It shall from now be referenced as simply config or project.config
-    def prop = new Properties()
-    prop.load(it)
-    project.ext.config = new ConfigSlurper().parse prop
-}
 
 dependencies {
     //packed 'org.apache.commons:commons-math3:3.2'
