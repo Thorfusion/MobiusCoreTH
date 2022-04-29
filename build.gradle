@@ -106,12 +106,12 @@ artifacts {
 }
 
 artifactory {
-    contextUrl = "${artifactory_contextUrl}"
+    contextUrl = System.getenv("MAVEN_URL")
     publish {
         repository {
             repoKey = 'thorfusion'
-            username = "${artifactory_user}"
-            password = "${artifactory_password}"
+            username = System.getenv("MAVEN_USERNAME")
+            password = System.getenv("MAVEN_PASSWORD")
             maven = true
         }
         defaults {
@@ -124,8 +124,8 @@ artifactory {
     resolve {
         repository {
             repoKey = 'central'
-            username = "${artifactory_user}"
-            password = "${artifactory_password}"
+            username = System.getenv("MAVEN_USERNAME")
+            password = System.getenv("MAVEN_PASSWORD")
             maven = true
 
         }
