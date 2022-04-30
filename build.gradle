@@ -45,10 +45,6 @@ configFile.withReader {
     project.ext.config = new ConfigSlurper().parse prop
 }
 
-dependencies {
-    compile(group: 'ivorius.ivtoolkit', name: 'IvToolkit', version: '1.2.1', classifier: 'dev')
-}
-
 version = "${config.mod_version}"
 group= "mcp.mobius.mobiuscore" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "MobiusCore"
