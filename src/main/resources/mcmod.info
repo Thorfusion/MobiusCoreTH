@@ -1,7 +1,7 @@
 [
 {
   "modid": "MobiusCore",
-  "name": "MobiusCore",
+  "name": "MobiusCore TF-E",
   "description": "Core mod used for Opis",
   "version": "${version}",
   "mcversion": "${mcversion}",
