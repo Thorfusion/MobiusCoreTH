@@ -148,6 +148,9 @@ publishing {
             groupId = project.group
             version = project.version
             artifacts = [sourceJar, devJar, jar]
+            components.java.withVariantsFromConfiguration(configurations.runtimeElements) {
+                skip()
+            }
         }
     }
 }
